@@ -202,7 +202,7 @@
         </span>
         <div class="truncate">
           <span class="font-bold tracking-tight text-sm sm:text-base block leading-tight">The Monday Drop</span>
-          <span class="text-xs text-zinc-500 dark:text-zinc-400 block leading-tight">Weekly Edition · Nov 16–Nov 23, 2026</span>
+          <span class="text-xs text-zinc-500 dark:text-zinc-400 block leading-tight">Issue #04 · Nov 16–23, 2026</span>
         </div>
       </div>
 
@@ -217,10 +217,7 @@
           <span id="themeIcon">🌙</span>
         </button>
 
-        <button id="openGroupmeBtn" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:opacity-90 shadow-sm transition-all cursor-pointer active:scale-95">
-          <span aria-hidden="true">💬</span>
-          <span>Copy for GroupMe</span>
-        </button>
+
       </div>
     </header>
   </div>
@@ -234,13 +231,13 @@
           <div class="space-y-3.5">
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold glass-chip text-zinc-700 dark:text-zinc-200">
               <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>Weekly Product &amp; Tool Digest · Nov 16–Nov 23, 2026</span>
+              <span>Weekly Product &amp; Tool Digest · Nov 16–23</span>
             </div>
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-[1.1] text-zinc-900 dark:text-white">
               8 Notable Launches Worth Checking Out This Week
             </h1>
             <p class="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-xl">
-              Flip through the interactive deck, tilt and explore each card, vote on your favorites, and generate a clean GroupMe post in one click.
+              Flip through the interactive deck, tilt and explore each card, vote on your favorites, and save tools to try later.
             </p>
           </div>
 
@@ -304,16 +301,16 @@
         <!-- Category Pills -->
         <div id="categoryFilters" class="flex flex-wrap gap-2" role="tablist" aria-label="Filter by category">
           <button type="button" data-cat="all" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
-            All (7)
+            All (8)
           </button>
           <button type="button" data-cat="coding" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
-            Coding &amp; Models (3)
+            Coding &amp; Models (4)
           </button>
           <button type="button" data-cat="images-video" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
-            Images &amp; Worlds (0)
+            Images &amp; Worlds (2)
           </button>
           <button type="button" data-cat="productivity" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
-            Productivity &amp; Writing (4)
+            Productivity &amp; Writing (2)
           </button>
         </div>
 
@@ -387,86 +384,16 @@
       </button>
     </div>
 
-    <!-- Bottom GroupMe Share Banner -->
-    <section class="rounded-3xl glass-panel p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-      <div class="space-y-1">
-        <h2 class="text-base sm:text-lg font-bold">Ready to drop this into GroupMe?</h2>
-        <p class="text-sm text-zinc-600 dark:text-zinc-300">
-          Generate a clean, mobile-friendly GroupMe summary (full list, top 3 highlights, or your starred picks) with verified links.
-        </p>
-      </div>
-      <button id="bottomGroupmeBtn" type="button" class="shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:opacity-90 shadow-sm active:scale-95 transition-all cursor-pointer">
-        Open GroupMe Post Builder
-      </button>
-    </section>
+
 
   </main>
 
   <footer class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-8 border-t border-zinc-200/70 dark:border-white/10 text-xs text-zinc-500 dark:text-zinc-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-    <span>The Monday Drop · Issue #04 (Nov 16–Nov 23, 2026)</span>
+    <span>The Monday Drop · Issue #04 (November 16–23, 2026)</span>
     <span>All links verified against official vendor announcements &amp; release notes.</span>
   </footer>
 
-  <!-- GroupMe Post Builder Modal -->
-  <div id="groupmeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-panel w-full max-w-2xl rounded-3xl glass-panel shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-      <div class="px-5 py-4 border-b border-zinc-200/70 dark:border-white/10 flex items-center justify-between">
-        <div>
-          <h3 id="modalTitle" class="text-base sm:text-lg font-bold">GroupMe Post Builder</h3>
-          <p class="text-xs text-zinc-500 dark:text-zinc-400">Formatted for clean GroupMe mobile reading with clickable links.</p>
-        </div>
-        <button id="closeModalBtn" type="button" aria-label="Close modal" class="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-zinc-200/60 dark:hover:bg-white/10 text-zinc-500 cursor-pointer">
-          ✕
-        </button>
-      </div>
 
-      <div class="p-5 space-y-4 overflow-y-auto">
-        <div class="flex flex-wrap gap-2">
-          <button type="button" data-fmt="full" class="fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer">
-            Full Roundup (8 tools)
-          </button>
-          <button type="button" data-fmt="highlights" class="fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer">
-            Quick Top 3 Highlights
-          </button>
-          <button type="button" data-fmt="saved" class="fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer">
-            My Saved Picks (<span id="modalSavedCount">0</span>)
-          </button>
-        </div>
-
-        <div class="space-y-1.5">
-          <label for="customHeaderInput" class="block text-xs font-semibold text-zinc-600 dark:text-zinc-300">Optional GroupMe Intro Line</label>
-          <input
-            id="customHeaderInput"
-            type="text"
-            value="📌 This Week's Tool Drop (Nov 16–23) — quick roundup:"
-            class="w-full px-3 py-2 rounded-xl text-sm glass-chip focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div class="space-y-1.5">
-          <div class="flex items-center justify-between">
-            <label for="groupmePreview" class="block text-xs font-semibold text-zinc-600 dark:text-zinc-300">Ready-to-Paste Preview</label>
-            <span id="charCountLabel" class="text-xs text-zinc-400">0 chars</span>
-          </div>
-          <textarea
-            id="groupmePreview"
-            rows="11"
-            readonly
-            class="w-full p-3.5 rounded-xl text-xs sm:text-sm font-mono leading-relaxed glass-chip focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
-          ></textarea>
-        </div>
-      </div>
-
-      <div class="px-5 py-3.5 border-t border-zinc-200/70 dark:border-white/10 flex items-center justify-end gap-2.5">
-        <button id="cancelModalBtn" type="button" class="px-4 py-2 rounded-xl text-sm font-medium glass-chip hover:bg-white/80 dark:hover:bg-white/15 cursor-pointer">
-          Close
-        </button>
-        <button id="copyGroupmeTextBtn" type="button" class="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm cursor-pointer active:scale-95 transition-all">
-          Copy Message to Clipboard
-        </button>
-      </div>
-    </div>
-  </div>
 
   <!-- Toast Notification -->
   <div id="toast" class="hidden fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold shadow-lg toast-enter">
@@ -476,125 +403,142 @@
   <script>
     const TOOLS = [
       {
-            "id": "gpt-6-2-astra-sol",
-            "name": "GPT-6.2 Astra and Sol",
-            "date": "Nov 17, 2026",
-            "category": "coding",
-            "categoryLabel": "Coding & Models",
-            "accent": "from-blue-500/20 to-indigo-500/20",
-            "featured": true,
-            "pricingTier": "paid",
-            "pricingBadge": "Paid API",
-            "pricingDetail": "Accessible across ChatGPT Work, Codex, and the OpenAI API with improved efficiency at lower operational cost.",
-            "oneLine": "Next-generation AI models delivering enhanced professional reasoning, coding capability, and computer use.",
-            "usefulFor": "Software engineers, developers, and enterprise automation teams",
-            "url": "https://openai.com/index/introducing-gpt-6-2-astra-sol",
-            "highlight": "Delivers major performance gains in coding and agentic computer interaction while significantly reducing inference costs.",
-            "initialVotes": 14
+        id: 'gpt-6-2',
+        name: 'GPT-6.2 Astra & Sol',
+        date: 'Nov 17, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-blue-500/20 to-indigo-500/20',
+        featured: true,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Included in ChatGPT Plus, Pro, Business, Enterprise, and Edu plans in ChatGPT Work and Codex; metered API access via gpt-6.2-astra and gpt-6.2-sol.',
+        oneLine: "Upgrades OpenAI's flagship work and coding lineup—Astra traces multi-service bugs and builds template-matched decks, while Sol boosts everyday coding and writing throughput.",
+        usefulFor: 'Software engineers, researchers, and knowledge workers',
+        url: 'https://developers.openai.com/codex/whats-new/gpt-62-astra-sol',
+        highlight: 'Supports Ultrafast mode in the Responses API and mid-turn reasoning effort switching without breaking prompt cache.',
+        initialVotes: 14
       },
       {
-            "id": "google-search-personal-intelligence",
-            "name": "Google Search Personal Intelligence in AI Mode",
-            "date": "Nov 23, 2026",
-            "category": "productivity",
-            "categoryLabel": "Productivity & Writing",
-            "accent": "from-emerald-500/20 to-lime-500/20",
-            "featured": false,
-            "pricingTier": "free",
-            "pricingBadge": "Free",
-            "pricingDetail": "Available for free to users who securely opt in to connect their Google services.",
-            "oneLine": "Personalizes search results by securely drawing contextual insights from Google Drive, Wallet, and Gemini.",
-            "usefulFor": "Everyday Google users seeking tailored answers grounded in their personal documents and activity",
-            "url": "https://blog.google/products-and-platforms/products/search/google-search-personal-intelligence-apps/",
-            "highlight": "Taps directly into personal workspace data to deliver contextual, personalized search assistance.",
-            "initialVotes": 13
+        id: 'gemini-4-neon',
+        name: 'Gemini 4 Neon',
+        date: 'Nov 18, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-sky-500/20 to-teal-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Available to Google AI Pro and Ultra subscribers in the Gemini app and Google Antigravity, and via the Gemini API at $3 per 1M input tokens and $15 per 1M output tokens.',
+        oneLine: 'Delivers frontier reasoning (#3 on Artificial Analysis Intelligence Index) with a unified 1M-token context and decode window, 4 thinking levels, and fast coding/cyber execution.',
+        usefulFor: 'Enterprise developers, ML/data engineers, and security teams',
+        url: 'https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/',
+        highlight: 'Sits between Carbon and Hydrogen, matching or beating Carbon quality at 3x the speed and 60% of the cost.',
+        initialVotes: 11
       },
       {
-            "id": "gemini-tool-retrieval",
-            "name": "Gemini API Tool Retrieval",
-            "date": "Nov 19, 2026",
-            "category": "coding",
-            "categoryLabel": "Coding & Models",
-            "accent": "from-blue-500/20 to-indigo-500/20",
-            "featured": false,
-            "pricingTier": "free",
-            "pricingBadge": "Free Preview",
-            "pricingDetail": "Currently offered in free preview status for developers using the Gemini API.",
-            "oneLine": "Enables AI agents to dynamically retrieve and invoke hundreds of tools while dramatically saving token overhead.",
-            "usefulFor": "AI developers and backend engineers building agentic systems with complex tool integration",
-            "url": "https://blog.google/innovation-and-ai/technology/developers-tools/gemini-api-tool-retrieval/",
-            "highlight": "Drastically reduces context window token costs when providing AI models access to massive API libraries.",
-            "initialVotes": 12
+        id: 'glm-5-4',
+        name: 'Z.ai GLM-5.4',
+        date: 'Nov 23, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-indigo-500/20 to-violet-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Live now for GLM Coding Plan subscribers in ZCode, Z.ai Chat, and Claude Code (glm-5.4[1m]); API pricing and open weights planned after safety evaluation.',
+        oneLine: "Introduces Z.ai's first Loop Transformer flagship (~750B parameters running 28 layers twice per pass) with vision input and a 1M-token context window for generalized coding and CAD/3D scripting.",
+        usefulFor: 'Developers looking for a thorough second-pass security and code reviewer',
+        url: 'https://www.datacamp.com/blog/glm-5-4',
+        highlight: 'Independent reviewers found it surfaced subtle security bugs missed by other models—best used with explicit High effort.',
+        initialVotes: 6
       },
       {
-            "id": "tasks-in-gemini",
-            "name": "Tasks in Gemini",
-            "date": "Nov 17, 2026",
-            "category": "productivity",
-            "categoryLabel": "Productivity & Writing",
-            "accent": "from-emerald-500/20 to-lime-500/20",
-            "featured": false,
-            "pricingTier": "free",
-            "pricingBadge": "Free",
-            "pricingDetail": "Now available free of charge in six initial countries, with expanded Google Workspace integrations.",
-            "oneLine": "Executes multi-step automated workflows across Google Workspace applications on your behalf.",
-            "usefulFor": "Busy professionals wanting hands-free scheduling, task management, and Workspace automation",
-            "url": "https://blog.google/innovation-and-ai/products/gemini-app/tasks-in-gemini-free-new-features/",
-            "highlight": "Brings proactive autonomous task execution directly into standard Google consumer and workspace accounts.",
-            "initialVotes": 11
+        id: 'coderabbit-verify',
+        name: 'CodeRabbit Verify',
+        date: 'Nov 18, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-emerald-500/20 to-teal-500/20',
+        featured: false,
+        pricingTier: 'free',
+        pricingBadge: 'Free Beta',
+        pricingDetail: 'PR test runs, full-repo journey runs, and CodeRabbit Agent fixes are free during the public beta, ahead of paid tiers in Q1 2027.',
+        oneLine: 'Spins up isolated sandboxes to autonomously test a running app against pull-request changes and user journeys, then packages recordings and logs for one-click agent fixes.',
+        usefulFor: 'Engineering and QA teams keeping pace with AI-generated code',
+        url: 'https://www.coderabbit.ai/blog/introducing-coderabbit-verify',
+        highlight: 'Catches end-to-end workflow bugs that unit tests miss and exports Markdown handoffs to any coding agent.',
+        initialVotes: 9
       },
       {
-            "id": "chatgpt-for-sales",
-            "name": "ChatGPT for Sales",
-            "date": "Nov 17, 2026",
-            "category": "productivity",
-            "categoryLabel": "Productivity & Writing",
-            "accent": "from-emerald-500/20 to-lime-500/20",
-            "featured": false,
-            "pricingTier": "paid",
-            "pricingBadge": "Paid",
-            "pricingDetail": "Available through enterprise ChatGPT integrations featuring specialized sales and CRM partner plugins.",
-            "oneLine": "Accelerates revenue operations by connecting sales teams with prospect research, pitch preparation, and CRM updates.",
-            "usefulFor": "Sales reps, account executives, and revenue operations teams",
-            "url": "https://openai.com/index/introducing-chatgpt-for-sales",
-            "highlight": "Integrates ChatGPT directly into daily sales pipelines via more than 30 dedicated enterprise plugins.",
-            "initialVotes": 10
+        id: 'mai-image-2-7',
+        name: 'MAI Image 2.7, 2.7 Flash & Canvas',
+        date: 'Nov 17, 2026',
+        category: 'images-video',
+        categoryLabel: 'Images & Worlds',
+        accent: 'from-orange-500/20 to-rose-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Public preview on Microsoft Foundry and partner platforms (fal, OpenRouter, Vercel) at ~$35 per 1,000 images for 2.7 and ~$10 per 1,000 images for 2.7 Flash.',
+        oneLine: "Launches Microsoft AI's #1-ranked image editing model (AA-Image-Editing v2.1) with transparent background output, multi-step edit consistency, and the interactive Canvas workspace in MAI Labs.",
+        usefulFor: 'E-commerce teams, product designers, and high-volume creative pipelines',
+        url: 'https://microsoft.ai/news/introducing-mai-image-2-7/',
+        highlight: 'Native transparent backgrounds eliminate manual cutout steps, at roughly one-fifth the API cost of top competitors.',
+        initialVotes: 8
       },
       {
-            "id": "inkling-2-mini",
-            "name": "Inkling 2 Mini",
-            "date": "Nov 20, 2026",
-            "category": "coding",
-            "categoryLabel": "Coding & Models",
-            "accent": "from-blue-500/20 to-indigo-500/20",
-            "featured": false,
-            "pricingTier": "free",
-            "pricingBadge": "Free Open Source",
-            "pricingDetail": "Free open-weight model hostable locally via Hugging Face.",
-            "oneLine": "A compact open-weight language model optimized for high performance on consumer hardware.",
-            "usefulFor": "Developers and researchers building privacy-focused, local AI implementations",
-            "url": "https://huggingface.co/blog/inkling2mini",
-            "highlight": "Pushes local AI capabilities forward by delivering strong benchmark results within a small memory footprint.",
-            "initialVotes": 9
+        id: 'genie-4',
+        name: 'Genie 4 & Project Genie',
+        date: 'Nov 18–19, 2026',
+        category: 'images-video',
+        categoryLabel: 'Images & Worlds',
+        accent: 'from-amber-500/20 to-orange-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Rolling out in Project Genie for eligible Google AI Ultra subscribers (waitlist for AI Pro), and GA on the Gemini Interactions API at ~$0.10/sec of video with audio ($1.50/$17.50 per 1M input/video-output tokens).',
+        oneLine: 'Streams real-time, steerable 24 fps interactive 3D worlds with synchronized 48 kHz stereo audio that you can edit mid-session using natural-language prompts.',
+        usefulFor: 'Game prototypers, simulation researchers, and interactive media creators',
+        url: 'https://aistudio.google.com/docs/changelog',
+        highlight: 'Steer live with WASD/arrow keys and change weather or add characters on the fly without restarting.',
+        initialVotes: 12
       },
       {
-            "id": "nothing-ear-note",
-            "name": "Nothing Ear Note",
-            "date": "Nov 23, 2026",
-            "category": "productivity",
-            "categoryLabel": "Productivity & Writing",
-            "accent": "from-emerald-500/20 to-lime-500/20",
-            "featured": false,
-            "pricingTier": "paid",
-            "pricingBadge": "Paid Hardware",
-            "pricingDetail": "Commercial hardware device bundled with a companion recording and transcription app.",
-            "oneLine": "Smart earbuds equipped with built-in recording, real-time audio transcription, and AI summary generation.",
-            "usefulFor": "Students, journalists, and professionals wanting seamless meeting and idea transcription",
-            "url": "https://www.theverge.com/gadgets/1040357/nothing-ear-note-earbuds-ai-recording",
-            "highlight": "Integrates hardware-level AI audio recording and summarization directly into wireless earbuds.",
-            "initialVotes": 8
+        id: 'chatgpt-space',
+        name: 'ChatGPT Space (Plus) & Live Dictation',
+        date: 'Nov 18–20, 2026',
+        category: 'productivity',
+        categoryLabel: 'Productivity & Writing',
+        accent: 'from-emerald-500/20 to-lime-500/20',
+        featured: false,
+        pricingTier: 'free',
+        pricingBadge: 'Free & Paid',
+        pricingDetail: 'Live Dictation is rolling out globally to all ChatGPT plans including Free; ChatGPT Space requires Plus, Pro, Business, or Enterprise.',
+        oneLine: 'Brings collaborative, auto-updating interactive Pages and slide decks in ChatGPT Space to Plus users globally, alongside real-time streaming Live Dictation with no 10-minute cap.',
+        usefulFor: 'Teams, students, and everyday ChatGPT users organizing shared projects or dictating on the go',
+        url: 'https://help.openai.com/en/articles/6825453-chatgpt-release-notes',
+        highlight: 'Pages in Space can automatically refresh from connected apps like Slack, and mobile gets a customizable tab bar.',
+        initialVotes: 10
+      },
+      {
+        id: 'qwen4-max',
+        name: 'Qwen4-Max',
+        date: 'Nov 16, 2026',
+        category: 'productivity',
+        categoryLabel: 'Productivity & Writing',
+        accent: 'from-rose-500/20 to-amber-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid API',
+        pricingDetail: 'API-only at $1.50 per 1M input tokens and $4.50 per 1M output tokens ($0.075 cache reads), with a 30% introductory serverless discount on Together AI.',
+        oneLine: "Opens Alibaba's 2.4T-parameter sparse MoE flagship (71B active) as a unified text, image, and video API with a 1M-token context window and up to 393K output tokens.",
+        usefulFor: 'Teams automating document generation, video Q&A, and batch workflows on a budget',
+        url: 'https://local-ai-zone.github.io/blog/qwen-4-deep-dive.html',
+        highlight: 'No weights published (API-only shift for Alibaba), but undercuts frontier rivals sharply on cost per task.',
+        initialVotes: 5
       }
-];
+    ];
 
     function getVisualThumbnail(category, accent) {
       if (category === 'coding') {
@@ -643,8 +587,7 @@
       expandedIds: new Set(),
       userVoted: new Set(),
       votes: {},
-      theme: 'light',
-      groupmeFormat: 'full'
+      theme: 'light'
     };
 
     TOOLS.forEach((t) => {
@@ -781,7 +724,6 @@
 
     function renderStatsAndSaved() {
       document.getElementById('savedCountBadge').textContent = String(state.bookmarkedIds.size);
-      document.getElementById('modalSavedCount').textContent = String(state.bookmarkedIds.size);
 
       const savedBtn = document.getElementById('savedFilterBtn');
       if (state.showSavedOnly) {
@@ -1020,87 +962,7 @@
       }, true);
     }
 
-    function buildGroupmeText() {
-      const intro = document.getElementById('customHeaderInput').value.trim();
-      let selected = [];
 
-      if (state.groupmeFormat === 'full') {
-        selected = TOOLS;
-      } else if (state.groupmeFormat === 'highlights') {
-        selected = [TOOLS[0], TOOLS[3], TOOLS[6]];
-      } else {
-        selected = TOOLS.filter((t) => state.bookmarkedIds.has(t.id));
-      }
-
-      if (selected.length === 0) {
-        return `${intro}\n\n(No tools starred yet — click "Save" on any card to build a custom GroupMe list!)`;
-      }
-
-      const lines = [];
-      if (intro) {
-        lines.push(intro, '');
-      }
-
-      selected.forEach((tool, idx) => {
-        const tag = tool.featured ? '🔥 #1 Launch · ' : '';
-        lines.push(`${idx + 1}. ${tag}${tool.name} (${tool.pricingBadge})`);
-        lines.push(`${tool.oneLine}`);
-        lines.push(`Best for: ${tool.usefulFor}`);
-        lines.push(`🔗 ${tool.url}`);
-        lines.push('');
-      });
-
-      lines.push('Reply with which one you are trying first!');
-      return lines.join('\n').trim();
-    }
-
-    function renderGroupmeModal() {
-      document.querySelectorAll('.fmt-btn').forEach((btn) => {
-        const active = btn.dataset.fmt === state.groupmeFormat;
-        if (active) {
-          btn.className = 'fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 transition-colors cursor-pointer';
-        } else {
-          btn.className = 'fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold glass-chip text-zinc-600 dark:text-zinc-300 hover:border-blue-500/50 transition-colors cursor-pointer';
-        }
-      });
-
-      const text = buildGroupmeText();
-      const preview = document.getElementById('groupmePreview');
-      preview.value = text;
-      document.getElementById('charCountLabel').textContent = `${text.length} chars`;
-    }
-
-    function openGroupmeModal() {
-      renderGroupmeModal();
-      document.getElementById('groupmeModal').classList.remove('hidden');
-    }
-
-    function closeGroupmeModal() {
-      document.getElementById('groupmeModal').classList.add('hidden');
-    }
-
-    function copyTextToClipboard(text) {
-      if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(
-          () => showToast('GroupMe message copied!'),
-          () => fallbackCopy(text)
-        );
-      } else {
-        fallbackCopy(text);
-      }
-    }
-
-    function fallbackCopy(text) {
-      const ta = document.getElementById('groupmePreview');
-      ta.focus();
-      ta.select();
-      try {
-        document.execCommand('copy');
-        showToast('GroupMe message copied!');
-      } catch (e) {
-        showToast('Select the text above and press Ctrl/Cmd+C');
-      }
-    }
 
     function resetAllFilters() {
       state.selectedCategory = 'all';
@@ -1362,8 +1224,6 @@
 
       document.addEventListener('keydown', (e) => {
         if (state.viewMode !== 'deck') return;
-        const modalOpen = !document.getElementById('groupmeModal').classList.contains('hidden');
-        if (modalOpen) return;
         const list = getFilteredTools();
         if (!list.length) return;
         if (e.key === 'ArrowRight') {
@@ -1438,7 +1298,7 @@
             showToast('Removed from Saved');
           } else {
             state.bookmarkedIds.add(id);
-            showToast('Saved to your GroupMe picks');
+            showToast('Saved to your bookmarks');
           }
           savePersistedState();
           renderAll();
@@ -1455,27 +1315,7 @@
       document.getElementById('toolsContainer').addEventListener('click', handleCardAction);
       document.getElementById('deckStage').addEventListener('click', handleCardAction);
 
-      document.getElementById('openGroupmeBtn').addEventListener('click', openGroupmeModal);
-      document.getElementById('bottomGroupmeBtn').addEventListener('click', openGroupmeModal);
-      document.getElementById('closeModalBtn').addEventListener('click', closeGroupmeModal);
-      document.getElementById('cancelModalBtn').addEventListener('click', closeGroupmeModal);
 
-      document.getElementById('groupmeModal').addEventListener('click', (e) => {
-        if (e.target.id === 'groupmeModal') closeGroupmeModal();
-      });
-
-      document.querySelector('#groupmeModal').addEventListener('click', (e) => {
-        const fmtBtn = e.target.closest('.fmt-btn');
-        if (!fmtBtn) return;
-        state.groupmeFormat = fmtBtn.dataset.fmt;
-        renderGroupmeModal();
-      });
-
-      document.getElementById('customHeaderInput').addEventListener('input', renderGroupmeModal);
-
-      document.getElementById('copyGroupmeTextBtn').addEventListener('click', () => {
-        copyTextToClipboard(document.getElementById('groupmePreview').value);
-      });
     });
   </script>
 </body>
