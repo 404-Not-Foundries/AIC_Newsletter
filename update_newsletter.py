@@ -17,14 +17,17 @@ import json
 import os
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 import xml.etree.ElementTree as ET
 
-GEMINI_ENDPOINT = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-4-hydrogen:generateContent"
-)
+GEMINI_MODELS = [
+    "gemini-4-hydrogen",
+    "gemini-3.8-flash",
+    "gemini-3.6-flash",
+    "gemini-3.5-flash-lite",
+]
 
 RSS_FEEDS = [
     ("TechCrunch AI", "https://techcrunch.com/category/artificial-intelligence/feed/"),
@@ -103,14 +106,12 @@ def fetch_recent_items(days: int = 8) -> list[dict]:
             if is_atom:
                 title_el = entry.find("{http://www.w3.org/2005/Atom}title")
                 link_el = entry.find("{http://www.w3.org/2005/Atom}link")
-                date_el = (
-                    entry.find("{http://www.w3.org/2005/Atom}published")
-                    or entry.find("{http://www.w3.org/2005/Atom}updated")
-                )
-                desc_el = (
-                    entry.find("{http://www.w3.org/2005/Atom}summary")
-                    or entry.find("{http://www.w3.org/2005/Atom}content")
-                )
+                date_el = entry.find("{http://www.w3.org/2005/Atom}published")
+                if date_el is None:
+                    date_el = entry.find("{http://www.w3.org/2005/Atom}updated")
+                desc_el = entry.find("{http://www.w3.org/2005/Atom}summary")
+                if desc_el is None:
+                    desc_el = entry.find("{http://www.w3.org/2005/Atom}content")
                 link = link_el.attrib.get("href", "") if link_el is not None else ""
             else:
                 title_el = entry.find("title")
@@ -167,22 +168,45 @@ Articles:
         },
     }
 
-    req = urllib.request.Request(
-        GEMINI_ENDPOINT,
-        data=json.dumps(payload).encode("utf-8"),
-        headers={
-            "Content-Type": "application/json",
-            "x-goog-api-key": api_key,
-        },
-        method="POST",
-    )
+    data = None
+    last_err = None
+    body_bytes = json.dumps(payload).encode("utf-8")
 
-    try:
-        with urllib.request.urlopen(req, timeout=60) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as err:
-        body = err.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"Gemini API error {err.code}: {body}") from err
+    for model_name in GEMINI_MODELS:
+        endpoint = (
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"{model_name}:generateContent"
+        )
+        for attempt in range(1, 3):
+            req = urllib.request.Request(
+                endpoint,
+                data=body_bytes,
+                headers={
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": api_key,
+                },
+                method="POST",
+            )
+            try:
+                print(f"Trying {model_name} (attempt {attempt})...")
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                break
+            except urllib.error.HTTPError as err:
+                body = err.read().decode("utf-8", errors="replace")
+                last_err = RuntimeError(f"{model_name} HTTP {err.code}: {body}")
+                if err.code in (429, 500, 503, 504):
+                    print(f"Transient {err.code} on {model_name}, retrying...", file=sys.stderr)
+                    time.sleep(3 * attempt)
+                    continue
+                if err.code == 404:
+                    break
+                raise last_err from err
+        if data is not None:
+            break
+
+    if data is None:
+        raise last_err or RuntimeError("All Gemini models failed.")
 
     raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
     curated = json.loads(raw_text)
