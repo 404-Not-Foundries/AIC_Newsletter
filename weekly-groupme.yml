@@ -1,0 +1,46 @@
+name: Weekly GroupMe Newsletter Drop
+
+on:
+  schedule:
+    # Runs every Monday at 15:00 UTC (9:00 AM CST / 10:00 AM CDT)
+    - cron: "0 15 * * 1"
+  workflow_dispatch:
+    # Lets you trigger a run manually from the GitHub Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  update-and-post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch weekly AI tools and update index.html
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python3 update_newsletter.py
+
+      - name: Commit updated index.html to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Update weekly newsletter ($(date -u +'%Y-%m-%d'))"
+            git push
+          else
+            echo "No changes to index.html"
+          fi
+
+      - name: Post weekly roundup to GroupMe
+        env:
+          GROUPME_BOT_ID: ${{ secrets.GROUPME_BOT_ID }}
+          NEWSLETTER_URL: ${{ vars.NEWSLETTER_URL }}
+        run: python3 post_to_groupme.py
