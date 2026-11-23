@@ -168,9 +168,12 @@ Articles:
     }
 
     req = urllib.request.Request(
-        f"{GEMINI_ENDPOINT}?key={api_key}",
+        GEMINI_ENDPOINT,
         data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "x-goog-api-key": api_key,
+        },
         method="POST",
     )
 
