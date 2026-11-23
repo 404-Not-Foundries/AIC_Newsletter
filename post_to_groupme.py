@@ -56,9 +56,10 @@ def extract_tools_from_html(html_path: str) -> list[dict]:
 
 def build_messages(tools: list[dict], newsletter_url: str = "") -> list[str]:
     """Build one or more GroupMe messages under the 1,000-character limit."""
-    header = "📌 The Monday Drop — Weekly AI & Tech Launches\n"
     if newsletter_url:
-        header += f"🌐 Interactive 3D Deck: {newsletter_url}\n"
+        header = f"🌐 {newsletter_url}\n\n📌 The Monday Drop — Weekly AI & Tech Launches\n"
+    else:
+        header = "📌 The Monday Drop — Weekly AI & Tech Launches\n"
 
     chunks: list[str] = []
     current = header.strip()
