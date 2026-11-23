@@ -1,0 +1,1499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Monday Drop — Nov 16–23, 2026 Interactive Tech Digest</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Warm Editorial Mesh Backdrop (non-cliche, non-generic-AI) */
+    .mesh-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+    .mesh-blob {
+      position: absolute;
+      border-radius: 9999px;
+      filter: blur(90px);
+      opacity: 0.48;
+      will-change: transform;
+    }
+    html.dark .mesh-blob {
+      opacity: 0.36;
+    }
+    .blob-1 {
+      width: 560px;
+      height: 560px;
+      top: -150px;
+      left: -100px;
+      background: radial-gradient(circle, rgba(251, 146, 60, 0.55), rgba(244, 63, 94, 0.18));
+      animation: drift1 18s ease-in-out infinite alternate;
+    }
+    .blob-2 {
+      width: 620px;
+      height: 620px;
+      top: 5%;
+      right: -140px;
+      background: radial-gradient(circle, rgba(59, 130, 246, 0.5), rgba(99, 102, 241, 0.22));
+      animation: drift2 22s ease-in-out infinite alternate;
+    }
+    .blob-3 {
+      width: 500px;
+      height: 500px;
+      bottom: -140px;
+      left: 25%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.45), rgba(20, 184, 166, 0.16));
+      animation: drift3 20s ease-in-out infinite alternate;
+    }
+    @keyframes drift1 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(65px, 45px) scale(1.1); }
+    }
+    @keyframes drift2 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(-75px, 55px) scale(1.08); }
+    }
+    @keyframes drift3 {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(45px, -55px) scale(1.12); }
+    }
+
+    /* Frosted Glassmorphism */
+    .glass-surface {
+      backdrop-filter: blur(24px) saturate(180%);
+      -webkit-backdrop-filter: blur(24px) saturate(180%);
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.68);
+      backdrop-filter: blur(26px) saturate(190%);
+      -webkit-backdrop-filter: blur(26px) saturate(190%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 20px 50px -15px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    }
+    html.dark .glass-panel {
+      background: rgba(24, 24, 27, 0.62);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+    .glass-chip {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    html.dark .glass-chip {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    /* 3D Tilt & Specular Sheen Cards */
+    .tilt-wrap {
+      perspective: 1100px;
+    }
+    .glass-card {
+      position: relative;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(24px) saturate(185%);
+      -webkit-backdrop-filter: blur(24px) saturate(185%);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 16px 38px -14px rgba(15, 23, 42, 0.09), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.25s ease, box-shadow 0.28s ease;
+      animation: cardIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    html.dark .glass-card {
+      background: rgba(24, 24, 27, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 20px 44px -16px rgba(0, 0, 0, 0.58), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+    .glass-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.28s ease;
+      background: radial-gradient(420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.55), transparent 65%);
+    }
+    html.dark .glass-card::before {
+      background: radial-gradient(420px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, 0.12), transparent 65%);
+    }
+    .glass-card:hover::before {
+      opacity: 1;
+    }
+    .glass-card:hover {
+      border-color: rgba(59, 130, 246, 0.42);
+      box-shadow: 0 26px 55px -16px rgba(59, 130, 246, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    .card-highlight {
+      border-color: rgba(59, 130, 246, 0.8) !important;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.55), 0 22px 50px -14px rgba(59, 130, 246, 0.28) !important;
+    }
+    .featured-glow {
+      border-color: rgba(249, 115, 22, 0.35);
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .details-drawer {
+      animation: expandIn 0.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes expandIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .modal-panel {
+      animation: modalIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: scale(0.96) translateY(8px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .toast-enter {
+      animation: toastSlideUp 0.25s ease-out forwards;
+    }
+    @keyframes toastSlideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-[#f6f5f1] text-zinc-900 dark:bg-[#0c0d10] dark:text-zinc-100 min-h-screen transition-colors duration-300 antialiased relative selection:bg-blue-500/25">
+
+  <!-- Warm Mesh Gradient Backdrop -->
+  <div class="mesh-bg" aria-hidden="true">
+    <div class="mesh-blob blob-1"></div>
+    <div class="mesh-blob blob-2"></div>
+    <div class="mesh-blob blob-3"></div>
+  </div>
+
+  <!-- Floating Glass Navbar -->
+  <div class="sticky top-3 z-40 px-4 sm:px-6 max-w-5xl mx-auto">
+    <header class="rounded-2xl glass-panel px-4 sm:px-5 h-16 flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-extrabold text-xs tracking-tight shadow-sm">
+          MD
+        </span>
+        <div class="truncate">
+          <span class="font-bold tracking-tight text-sm sm:text-base block leading-tight">The Monday Drop</span>
+          <span class="text-xs text-zinc-500 dark:text-zinc-400 block leading-tight">Issue #04 · Nov 16–23, 2026</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button id="savedFilterBtn" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium glass-chip hover:bg-white/80 dark:hover:bg-white/15 transition-all cursor-pointer active:scale-95">
+          <span aria-hidden="true">★</span>
+          <span class="hidden sm:inline">Saved</span>
+          <span id="savedCountBadge" class="inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1 rounded-full text-xs font-semibold bg-blue-600/15 text-blue-700 dark:text-blue-300">0</span>
+        </button>
+
+        <button id="themeToggleBtn" type="button" aria-label="Toggle light or dark theme" class="inline-flex items-center justify-center h-9 w-9 rounded-xl glass-chip hover:bg-white/80 dark:hover:bg-white/15 transition-all cursor-pointer text-sm active:scale-95">
+          <span id="themeIcon">🌙</span>
+        </button>
+
+        <button id="openGroupmeBtn" type="button" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:opacity-90 shadow-sm transition-all cursor-pointer active:scale-95">
+          <span aria-hidden="true">💬</span>
+          <span>Copy for GroupMe</span>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-9 space-y-8">
+
+    <!-- Editorial Hero with Live Interactive 3D Three.js Sculpture -->
+    <section class="relative overflow-hidden rounded-3xl glass-panel">
+      <div class="grid grid-cols-1 lg:grid-cols-12 items-stretch">
+        <div class="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+          <div class="space-y-3.5">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold glass-chip text-zinc-700 dark:text-zinc-200">
+              <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span>Weekly Product &amp; Tool Digest · Nov 16–23</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-[1.1] text-zinc-900 dark:text-white">
+              8 Notable Launches Worth Checking Out This Week
+            </h1>
+            <p class="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-xl">
+              Flip through the interactive deck, tilt and explore each card, vote on your favorites, and generate a clean GroupMe post in one click.
+            </p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2.5 pt-1">
+            <button id="jumpFeaturedBtn" type="button" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-600/20 active:scale-95 transition-all cursor-pointer">
+              <span>#1 Launch: GPT-6.2 Astra &amp; Sol</span>
+              <span aria-hidden="true">↓</span>
+            </button>
+            <div class="flex flex-wrap items-center gap-2 text-xs font-medium">
+              <span class="glass-chip px-2.5 py-1.5 rounded-xl"><strong>8</strong> launches</span>
+              <span class="glass-chip px-2.5 py-1.5 rounded-xl"><strong class="text-emerald-600 dark:text-emerald-400">2</strong> free/beta</span>
+              <span id="totalVotesText" class="glass-chip px-2.5 py-1.5 rounded-xl"><strong>0</strong> votes</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Interactive 3D Canvas Container -->
+        <div class="lg:col-span-5 relative min-h-[240px] sm:min-h-[270px] bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-orange-400/15 border-t lg:border-t-0 lg:border-l border-white/50 dark:border-white/10 overflow-hidden">
+          <canvas id="hero3dCanvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+          <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+            <span class="px-2.5 py-1 rounded-lg text-[11px] font-medium glass-chip text-zinc-700 dark:text-zinc-200">
+              Interactive 3D · Drag or hover
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Picker ("What should I try first?") -->
+    <section class="rounded-2xl glass-panel p-4 sm:p-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+        <div>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Quick Pick · What Should I Try First?</h2>
+          <p id="recommenderResult" class="text-sm text-zinc-700 dark:text-zinc-300 mt-0.5">
+            Select a goal to highlight this week's best match.
+          </p>
+        </div>
+        <button id="clearPickBtn" type="button" class="hidden self-start sm:self-center text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+          Clear highlight
+        </button>
+      </div>
+      <div id="recommenderBtns" class="flex flex-wrap gap-2">
+        <button type="button" data-goal="coding" class="goal-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium glass-chip hover:border-blue-500/60 transition-all cursor-pointer active:scale-95">
+          💻 Coding &amp; Debugging
+        </button>
+        <button type="button" data-goal="visuals" class="goal-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium glass-chip hover:border-blue-500/60 transition-all cursor-pointer active:scale-95">
+          🎨 Design &amp; 3D Worlds
+        </button>
+        <button type="button" data-goal="workflow" class="goal-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium glass-chip hover:border-blue-500/60 transition-all cursor-pointer active:scale-95">
+          ⚡ Docs &amp; Team Workflow
+        </button>
+        <button type="button" data-goal="free" class="goal-btn px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium glass-chip hover:border-blue-500/60 transition-all cursor-pointer active:scale-95">
+          🆓 Free / Open Beta Pick
+        </button>
+      </div>
+    </section>
+
+    <!-- View Mode + Search & Filter Toolbar -->
+    <section class="space-y-3">
+      <div class="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+        <!-- Category Pills -->
+        <div id="categoryFilters" class="flex flex-wrap gap-2" role="tablist" aria-label="Filter by category">
+          <button type="button" data-cat="all" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+            All (8)
+          </button>
+          <button type="button" data-cat="coding" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+            Coding &amp; Models (4)
+          </button>
+          <button type="button" data-cat="images-video" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+            Images &amp; Worlds (2)
+          </button>
+          <button type="button" data-cat="productivity" class="cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all cursor-pointer">
+            Productivity &amp; Writing (2)
+          </button>
+        </div>
+
+        <!-- View Switcher + Search + Pricing -->
+        <div class="flex flex-wrap sm:flex-nowrap items-center gap-2">
+          <div class="inline-flex rounded-xl p-1 glass-chip shrink-0" role="group" aria-label="View mode">
+            <button id="gridViewBtn" type="button" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer">
+              Grid
+            </button>
+            <button id="deckViewBtn" type="button" class="px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer">
+              Interactive Deck
+            </button>
+          </div>
+
+          <div class="relative flex-1 sm:w-48">
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Search tools..."
+              class="w-full pl-8 pr-3 py-1.5 rounded-xl text-sm glass-chip focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+            />
+            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400 text-xs" aria-hidden="true">🔍</span>
+          </div>
+
+          <select id="pricingFilter" aria-label="Filter by pricing" class="px-3 py-1.5 rounded-xl text-sm glass-chip focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+            <option value="all">All Pricing</option>
+            <option value="free">Free / Free Beta</option>
+            <option value="paid">Paid / API</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="activeFilterStatus" class="hidden flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400 px-1">
+        <span id="filterSummaryText"></span>
+        <button id="resetAllFiltersBtn" type="button" class="text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer">Reset filters</button>
+      </div>
+    </section>
+
+    <!-- Interactive Deck Walkthrough (Shown in Deck Mode) -->
+    <section id="deckSection" class="hidden space-y-4">
+      <div class="flex items-center justify-between gap-3">
+        <span id="deckCounter" class="text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">Card 1 of 8</span>
+        <div class="flex items-center gap-2">
+          <button id="deckPrevBtn" type="button" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold glass-chip hover:bg-white/90 dark:hover:bg-white/15 active:scale-95 transition-all cursor-pointer">
+            ← Prev
+          </button>
+          <button id="deckNextBtn" type="button" class="px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:opacity-90 active:scale-95 transition-all cursor-pointer">
+            Next →
+          </button>
+        </div>
+      </div>
+      <div id="deckStage" class="tilt-wrap">
+        <!-- Active deck card rendered here -->
+      </div>
+      <div id="deckDots" class="flex items-center justify-center gap-1.5 pt-1">
+        <!-- Progress dots -->
+      </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section id="toolsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+      <!-- Rendered dynamically by JS -->
+    </section>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden rounded-3xl glass-panel p-10 text-center space-y-3">
+      <p class="text-base font-semibold">No tools match those filters</p>
+      <p class="text-sm text-zinc-500 dark:text-zinc-400">Try clearing your search or switching back to all categories.</p>
+      <button id="emptyResetBtn" type="button" class="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 text-white hover:bg-blue-500 transition-colors cursor-pointer">
+        Show all 8 tools
+      </button>
+    </div>
+
+    <!-- Bottom GroupMe Share Banner -->
+    <section class="rounded-3xl glass-panel p-5 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div class="space-y-1">
+        <h2 class="text-base sm:text-lg font-bold">Ready to drop this into GroupMe?</h2>
+        <p class="text-sm text-zinc-600 dark:text-zinc-300">
+          Generate a clean, mobile-friendly GroupMe summary (full list, top 3 highlights, or your starred picks) with verified links.
+        </p>
+      </div>
+      <button id="bottomGroupmeBtn" type="button" class="shrink-0 px-4 py-2.5 rounded-xl text-sm font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:opacity-90 shadow-sm active:scale-95 transition-all cursor-pointer">
+        Open GroupMe Post Builder
+      </button>
+    </section>
+
+  </main>
+
+  <footer class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 py-8 border-t border-zinc-200/70 dark:border-white/10 text-xs text-zinc-500 dark:text-zinc-400 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+    <span>The Monday Drop · Issue #04 (November 16–23, 2026)</span>
+    <span>All links verified against official vendor announcements &amp; release notes.</span>
+  </footer>
+
+  <!-- GroupMe Post Builder Modal -->
+  <div id="groupmeModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-zinc-950/60 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-panel w-full max-w-2xl rounded-3xl glass-panel shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="px-5 py-4 border-b border-zinc-200/70 dark:border-white/10 flex items-center justify-between">
+        <div>
+          <h3 id="modalTitle" class="text-base sm:text-lg font-bold">GroupMe Post Builder</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400">Formatted for clean GroupMe mobile reading with clickable links.</p>
+        </div>
+        <button id="closeModalBtn" type="button" aria-label="Close modal" class="h-8 w-8 rounded-lg flex items-center justify-center hover:bg-zinc-200/60 dark:hover:bg-white/10 text-zinc-500 cursor-pointer">
+          ✕
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 overflow-y-auto">
+        <div class="flex flex-wrap gap-2">
+          <button type="button" data-fmt="full" class="fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer">
+            Full Roundup (8 tools)
+          </button>
+          <button type="button" data-fmt="highlights" class="fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer">
+            Quick Top 3 Highlights
+          </button>
+          <button type="button" data-fmt="saved" class="fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer">
+            My Saved Picks (<span id="modalSavedCount">0</span>)
+          </button>
+        </div>
+
+        <div class="space-y-1.5">
+          <label for="customHeaderInput" class="block text-xs font-semibold text-zinc-600 dark:text-zinc-300">Optional GroupMe Intro Line</label>
+          <input
+            id="customHeaderInput"
+            type="text"
+            value="📌 This Week's Tool Drop (Nov 16–23) — quick roundup:"
+            class="w-full px-3 py-2 rounded-xl text-sm glass-chip focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label for="groupmePreview" class="block text-xs font-semibold text-zinc-600 dark:text-zinc-300">Ready-to-Paste Preview</label>
+            <span id="charCountLabel" class="text-xs text-zinc-400">0 chars</span>
+          </div>
+          <textarea
+            id="groupmePreview"
+            rows="11"
+            readonly
+            class="w-full p-3.5 rounded-xl text-xs sm:text-sm font-mono leading-relaxed glass-chip focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="px-5 py-3.5 border-t border-zinc-200/70 dark:border-white/10 flex items-center justify-end gap-2.5">
+        <button id="cancelModalBtn" type="button" class="px-4 py-2 rounded-xl text-sm font-medium glass-chip hover:bg-white/80 dark:hover:bg-white/15 cursor-pointer">
+          Close
+        </button>
+        <button id="copyGroupmeTextBtn" type="button" class="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white shadow-sm cursor-pointer active:scale-95 transition-all">
+          Copy Message to Clipboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="hidden fixed bottom-5 right-5 z-50 px-4 py-2.5 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-sm font-semibold shadow-lg toast-enter">
+    Copied to clipboard!
+  </div>
+
+  <script>
+    const TOOLS = [
+      {
+        id: 'gpt-6-2',
+        name: 'GPT-6.2 Astra & Sol',
+        date: 'Nov 17, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-blue-500/20 to-indigo-500/20',
+        featured: true,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Included in ChatGPT Plus, Pro, Business, Enterprise, and Edu plans in ChatGPT Work and Codex; metered API access via gpt-6.2-astra and gpt-6.2-sol.',
+        oneLine: "Upgrades OpenAI's flagship work and coding lineup—Astra traces multi-service bugs and builds template-matched decks, while Sol boosts everyday coding and writing throughput.",
+        usefulFor: 'Software engineers, researchers, and knowledge workers',
+        url: 'https://developers.openai.com/codex/whats-new/gpt-62-astra-sol',
+        highlight: 'Supports Ultrafast mode in the Responses API and mid-turn reasoning effort switching without breaking prompt cache.',
+        initialVotes: 14
+      },
+      {
+        id: 'gemini-4-neon',
+        name: 'Gemini 4 Neon',
+        date: 'Nov 18, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-sky-500/20 to-teal-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Available to Google AI Pro and Ultra subscribers in the Gemini app and Google Antigravity, and via the Gemini API at $3 per 1M input tokens and $15 per 1M output tokens.',
+        oneLine: 'Delivers frontier reasoning (#3 on Artificial Analysis Intelligence Index) with a unified 1M-token context and decode window, 4 thinking levels, and fast coding/cyber execution.',
+        usefulFor: 'Enterprise developers, ML/data engineers, and security teams',
+        url: 'https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-neon/',
+        highlight: 'Sits between Carbon and Hydrogen, matching or beating Carbon quality at 3x the speed and 60% of the cost.',
+        initialVotes: 11
+      },
+      {
+        id: 'glm-5-4',
+        name: 'Z.ai GLM-5.4',
+        date: 'Nov 23, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-indigo-500/20 to-violet-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Live now for GLM Coding Plan subscribers in ZCode, Z.ai Chat, and Claude Code (glm-5.4[1m]); API pricing and open weights planned after safety evaluation.',
+        oneLine: "Introduces Z.ai's first Loop Transformer flagship (~750B parameters running 28 layers twice per pass) with vision input and a 1M-token context window for generalized coding and CAD/3D scripting.",
+        usefulFor: 'Developers looking for a thorough second-pass security and code reviewer',
+        url: 'https://www.datacamp.com/blog/glm-5-4',
+        highlight: 'Independent reviewers found it surfaced subtle security bugs missed by other models—best used with explicit High effort.',
+        initialVotes: 6
+      },
+      {
+        id: 'coderabbit-verify',
+        name: 'CodeRabbit Verify',
+        date: 'Nov 18, 2026',
+        category: 'coding',
+        categoryLabel: 'Coding & Models',
+        accent: 'from-emerald-500/20 to-teal-500/20',
+        featured: false,
+        pricingTier: 'free',
+        pricingBadge: 'Free Beta',
+        pricingDetail: 'PR test runs, full-repo journey runs, and CodeRabbit Agent fixes are free during the public beta, ahead of paid tiers in Q1 2027.',
+        oneLine: 'Spins up isolated sandboxes to autonomously test a running app against pull-request changes and user journeys, then packages recordings and logs for one-click agent fixes.',
+        usefulFor: 'Engineering and QA teams keeping pace with AI-generated code',
+        url: 'https://www.coderabbit.ai/blog/introducing-coderabbit-verify',
+        highlight: 'Catches end-to-end workflow bugs that unit tests miss and exports Markdown handoffs to any coding agent.',
+        initialVotes: 9
+      },
+      {
+        id: 'mai-image-2-7',
+        name: 'MAI Image 2.7, 2.7 Flash & Canvas',
+        date: 'Nov 17, 2026',
+        category: 'images-video',
+        categoryLabel: 'Images & Worlds',
+        accent: 'from-orange-500/20 to-rose-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Public preview on Microsoft Foundry and partner platforms (fal, OpenRouter, Vercel) at ~$35 per 1,000 images for 2.7 and ~$10 per 1,000 images for 2.7 Flash.',
+        oneLine: "Launches Microsoft AI's #1-ranked image editing model (AA-Image-Editing v2.1) with transparent background output, multi-step edit consistency, and the interactive Canvas workspace in MAI Labs.",
+        usefulFor: 'E-commerce teams, product designers, and high-volume creative pipelines',
+        url: 'https://microsoft.ai/news/introducing-mai-image-2-7/',
+        highlight: 'Native transparent backgrounds eliminate manual cutout steps, at roughly one-fifth the API cost of top competitors.',
+        initialVotes: 8
+      },
+      {
+        id: 'genie-4',
+        name: 'Genie 4 & Project Genie',
+        date: 'Nov 18–19, 2026',
+        category: 'images-video',
+        categoryLabel: 'Images & Worlds',
+        accent: 'from-amber-500/20 to-orange-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid',
+        pricingDetail: 'Rolling out in Project Genie for eligible Google AI Ultra subscribers (waitlist for AI Pro), and GA on the Gemini Interactions API at ~$0.10/sec of video with audio ($1.50/$17.50 per 1M input/video-output tokens).',
+        oneLine: 'Streams real-time, steerable 24 fps interactive 3D worlds with synchronized 48 kHz stereo audio that you can edit mid-session using natural-language prompts.',
+        usefulFor: 'Game prototypers, simulation researchers, and interactive media creators',
+        url: 'https://aistudio.google.com/docs/changelog',
+        highlight: 'Steer live with WASD/arrow keys and change weather or add characters on the fly without restarting.',
+        initialVotes: 12
+      },
+      {
+        id: 'chatgpt-space',
+        name: 'ChatGPT Space (Plus) & Live Dictation',
+        date: 'Nov 18–20, 2026',
+        category: 'productivity',
+        categoryLabel: 'Productivity & Writing',
+        accent: 'from-emerald-500/20 to-lime-500/20',
+        featured: false,
+        pricingTier: 'free',
+        pricingBadge: 'Free & Paid',
+        pricingDetail: 'Live Dictation is rolling out globally to all ChatGPT plans including Free; ChatGPT Space requires Plus, Pro, Business, or Enterprise.',
+        oneLine: 'Brings collaborative, auto-updating interactive Pages and slide decks in ChatGPT Space to Plus users globally, alongside real-time streaming Live Dictation with no 10-minute cap.',
+        usefulFor: 'Teams, students, and everyday ChatGPT users organizing shared projects or dictating on the go',
+        url: 'https://help.openai.com/en/articles/6825453-chatgpt-release-notes',
+        highlight: 'Pages in Space can automatically refresh from connected apps like Slack, and mobile gets a customizable tab bar.',
+        initialVotes: 10
+      },
+      {
+        id: 'qwen4-max',
+        name: 'Qwen4-Max',
+        date: 'Nov 16, 2026',
+        category: 'productivity',
+        categoryLabel: 'Productivity & Writing',
+        accent: 'from-rose-500/20 to-amber-500/20',
+        featured: false,
+        pricingTier: 'paid',
+        pricingBadge: 'Paid API',
+        pricingDetail: 'API-only at $1.50 per 1M input tokens and $4.50 per 1M output tokens ($0.075 cache reads), with a 30% introductory serverless discount on Together AI.',
+        oneLine: "Opens Alibaba's 2.4T-parameter sparse MoE flagship (71B active) as a unified text, image, and video API with a 1M-token context window and up to 393K output tokens.",
+        usefulFor: 'Teams automating document generation, video Q&A, and batch workflows on a budget',
+        url: 'https://local-ai-zone.github.io/blog/qwen-4-deep-dive.html',
+        highlight: 'No weights published (API-only shift for Alibaba), but undercuts frontier rivals sharply on cost per task.',
+        initialVotes: 5
+      }
+    ];
+
+    function getVisualThumbnail(category, accent) {
+      if (category === 'coding') {
+        return `
+          <div class="h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br ${accent} border border-white/50 dark:border-white/10 flex items-center justify-center shadow-inner">
+            <svg viewBox="0 0 32 32" class="w-7 h-7 text-blue-600 dark:text-blue-300" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="10 10 4 16 10 22"></polyline>
+              <polyline points="22 10 28 16 22 22"></polyline>
+              <line x1="18" y1="6" x2="14" y2="26"></line>
+            </svg>
+          </div>`;
+      }
+      if (category === 'images-video') {
+        return `
+          <div class="h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br ${accent} border border-white/50 dark:border-white/10 flex items-center justify-center shadow-inner">
+            <svg viewBox="0 0 32 32" class="w-7 h-7 text-orange-600 dark:text-orange-300" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M16 4l10 5.8v11.6L16 27.2 6 21.4V9.8L16 4z"></path>
+              <polyline points="6 9.8 16 15.6 26 9.8"></polyline>
+              <line x1="16" y1="15.6" x2="16" y2="27.2"></line>
+            </svg>
+          </div>`;
+      }
+      return `
+        <div class="h-14 w-14 shrink-0 rounded-2xl bg-gradient-to-br ${accent} border border-white/50 dark:border-white/10 flex items-center justify-center shadow-inner">
+          <svg viewBox="0 0 32 32" class="w-7 h-7 text-emerald-600 dark:text-emerald-300" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="5" width="22" height="22" rx="5"></rect>
+            <line x1="10" y1="12" x2="22" y2="12"></line>
+            <line x1="10" y1="17" x2="18" y2="17"></line>
+            <circle cx="20" cy="21" r="2"></circle>
+          </svg>
+        </div>`;
+    }
+
+    const STORAGE_KEY = 'monday_drop_state_v2';
+
+    const state = {
+      selectedCategory: 'all',
+      selectedPricing: 'all',
+      searchQuery: '',
+      showSavedOnly: false,
+      viewMode: 'grid',
+      deckIndex: 0,
+      recommenderGoal: 'none',
+      highlightedToolId: null,
+      bookmarkedIds: new Set(),
+      expandedIds: new Set(),
+      userVoted: new Set(),
+      votes: {},
+      theme: 'light',
+      groupmeFormat: 'full'
+    };
+
+    TOOLS.forEach((t) => {
+      state.votes[t.id] = t.initialVotes;
+    });
+
+    function loadPersistedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed.bookmarkedIds)) {
+          state.bookmarkedIds = new Set(parsed.bookmarkedIds);
+        }
+        if (Array.isArray(parsed.userVoted)) {
+          state.userVoted = new Set(parsed.userVoted);
+        }
+        if (parsed.votes && typeof parsed.votes === 'object') {
+          Object.keys(parsed.votes).forEach((id) => {
+            if (typeof parsed.votes[id] === 'number') {
+              state.votes[id] = parsed.votes[id];
+            }
+          });
+        }
+        if (parsed.theme === 'light' || parsed.theme === 'dark') {
+          state.theme = parsed.theme;
+        }
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    function savePersistedState() {
+      try {
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({
+            bookmarkedIds: Array.from(state.bookmarkedIds),
+            userVoted: Array.from(state.userVoted),
+            votes: state.votes,
+            theme: state.theme
+          })
+        );
+      } catch (e) {
+        // Ignore storage errors
+      }
+    }
+
+    function applyTheme() {
+      const root = document.documentElement;
+      const icon = document.getElementById('themeIcon');
+      if (state.theme === 'dark') {
+        root.classList.add('dark');
+        icon.textContent = '☀️';
+      } else {
+        root.classList.remove('dark');
+        icon.textContent = '🌙';
+      }
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.remove('hidden');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add('hidden');
+      }, 2400);
+    }
+
+    function getFilteredTools() {
+      const q = state.searchQuery.trim().toLowerCase();
+      return TOOLS.filter((tool) => {
+        if (state.selectedCategory !== 'all' && tool.category !== state.selectedCategory) {
+          return false;
+        }
+        if (state.selectedPricing !== 'all' && tool.pricingTier !== state.selectedPricing) {
+          return false;
+        }
+        if (state.showSavedOnly && !state.bookmarkedIds.has(tool.id)) {
+          return false;
+        }
+        if (q) {
+          const hay = [
+            tool.name,
+            tool.oneLine,
+            tool.usefulFor,
+            tool.categoryLabel,
+            tool.pricingBadge,
+            tool.pricingDetail
+          ].join(' ').toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+
+    function getTopVotedId() {
+      let bestId = null;
+      let bestScore = -1;
+      TOOLS.forEach((t) => {
+        const v = state.votes[t.id] || 0;
+        if (v > bestScore) {
+          bestScore = v;
+          bestId = t.id;
+        }
+      });
+      return bestId;
+    }
+
+    function renderCategoryButtons() {
+      document.querySelectorAll('.cat-btn').forEach((btn) => {
+        const active = state.selectedCategory === btn.dataset.cat;
+        if (active) {
+          btn.className = 'cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm transition-all cursor-pointer';
+        } else {
+          btn.className = 'cat-btn px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-semibold glass-chip text-zinc-700 dark:text-zinc-300 hover:border-blue-500/50 transition-all cursor-pointer';
+        }
+      });
+    }
+
+    function renderViewButtons() {
+      const gridBtn = document.getElementById('gridViewBtn');
+      const deckBtn = document.getElementById('deckViewBtn');
+      if (state.viewMode === 'grid') {
+        gridBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm cursor-pointer';
+        deckBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white cursor-pointer';
+      } else {
+        deckBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm cursor-pointer';
+        gridBtn.className = 'px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white cursor-pointer';
+      }
+    }
+
+    function renderStatsAndSaved() {
+      document.getElementById('savedCountBadge').textContent = String(state.bookmarkedIds.size);
+      document.getElementById('modalSavedCount').textContent = String(state.bookmarkedIds.size);
+
+      const savedBtn = document.getElementById('savedFilterBtn');
+      if (state.showSavedOnly) {
+        savedBtn.classList.add('ring-2', 'ring-blue-500');
+      } else {
+        savedBtn.classList.remove('ring-2', 'ring-blue-500');
+      }
+
+      const totalVotes = TOOLS.reduce((sum, t) => sum + (state.votes[t.id] || 0), 0);
+      document.getElementById('totalVotesText').innerHTML = `<strong>${totalVotes}</strong> votes`;
+    }
+
+    function renderCardHtml(tool, index, topVotedId, isDeckMode) {
+      const isSaved = state.bookmarkedIds.has(tool.id);
+      const isExpanded = isDeckMode || state.expandedIds.has(tool.id);
+      const hasVoted = state.userVoted.has(tool.id);
+      const voteCount = state.votes[tool.id] || 0;
+      const isHighlighted = state.highlightedToolId === tool.id;
+      const isTopCommunity = tool.id === topVotedId;
+
+      const pricingPillClass =
+        tool.pricingTier === 'free'
+          ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/25'
+          : 'bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-500/25';
+
+      return `
+        <div class="tilt-wrap ${!isDeckMode && tool.featured ? 'md:col-span-2' : ''}">
+          <article
+            id="card-${tool.id}"
+            style="animation-delay: ${isDeckMode ? 0 : index * 45}ms"
+            class="glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between gap-4 h-full ${
+              tool.featured ? 'featured-glow' : ''
+            } ${isHighlighted ? 'card-highlight' : ''}"
+          >
+            <div class="space-y-4">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex flex-wrap items-center gap-1.5">
+                  <span class="inline-flex items-center justify-center h-6 px-2 rounded-md text-[11px] font-bold font-mono glass-chip text-zinc-700 dark:text-zinc-200">0${index + 1}</span>
+                  ${
+                    tool.featured
+                      ? '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wide bg-orange-500 text-white">🔥 #1 Launch</span>'
+                      : ''
+                  }
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold glass-chip text-zinc-700 dark:text-zinc-200">
+                    ${tool.categoryLabel}
+                  </span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${pricingPillClass}">
+                    ${tool.pricingBadge}
+                  </span>
+                  ${
+                    isTopCommunity
+                      ? '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-blue-500/15 text-blue-700 dark:text-blue-300">🏆 Group Favorite</span>'
+                      : ''
+                  }
+                </div>
+                <span class="text-xs text-zinc-500 dark:text-zinc-400">${tool.date}</span>
+              </div>
+
+              <div class="flex items-start gap-4">
+                ${getVisualThumbnail(tool.category, tool.accent)}
+                <div class="min-w-0 flex-1">
+                  <h3 class="text-lg sm:text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
+                    ${tool.name}
+                  </h3>
+                  <p class="mt-1.5 text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed">
+                    ${tool.oneLine}
+                  </p>
+                </div>
+              </div>
+
+              <div class="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
+                <span class="font-semibold text-zinc-800 dark:text-zinc-200">Best for:</span> ${tool.usefulFor}
+              </div>
+
+              ${
+                isExpanded
+                  ? `
+                    <div class="details-drawer p-3.5 rounded-2xl glass-chip space-y-2 text-xs sm:text-sm">
+                      <p class="text-zinc-700 dark:text-zinc-200">
+                        <strong class="font-semibold">Pricing &amp; Access:</strong> ${tool.pricingDetail}
+                      </p>
+                      <p class="text-zinc-600 dark:text-zinc-300">
+                        <strong class="font-semibold">Why it matters:</strong> ${tool.highlight}
+                      </p>
+                    </div>
+                  `
+                  : ''
+              }
+            </div>
+
+            <div class="pt-3 border-t border-zinc-200/60 dark:border-white/10 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  data-action="vote"
+                  data-id="${tool.id}"
+                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer active:scale-95 ${
+                    hasVoted
+                      ? 'bg-blue-500/15 border-blue-500/40 text-blue-700 dark:text-blue-300'
+                      : 'glass-chip text-zinc-700 dark:text-zinc-300 hover:border-blue-400'
+                  }"
+                >
+                  <span aria-hidden="true">${hasVoted ? '▲' : '△'}</span>
+                  <span>${voteCount}</span>
+                </button>
+
+                <button
+                  type="button"
+                  data-action="save"
+                  data-id="${tool.id}"
+                  class="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer active:scale-95 ${
+                    isSaved
+                      ? 'bg-amber-500/15 border-amber-500/40 text-amber-700 dark:text-amber-300'
+                      : 'glass-chip text-zinc-700 dark:text-zinc-300 hover:border-amber-400'
+                  }"
+                >
+                  <span aria-hidden="true">${isSaved ? '★' : '☆'}</span>
+                  <span>${isSaved ? 'Saved' : 'Save'}</span>
+                </button>
+
+                ${
+                  !isDeckMode
+                    ? `
+                      <button
+                        type="button"
+                        data-action="expand"
+                        data-id="${tool.id}"
+                        class="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-zinc-600 dark:text-zinc-300 hover:bg-white/60 dark:hover:bg-white/10 transition-colors cursor-pointer"
+                      >
+                        ${isExpanded ? 'Hide details ▲' : 'Pricing & details ▼'}
+                      </button>
+                    `
+                    : ''
+                }
+              </div>
+
+              <a
+                href="${tool.url}"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 hover:opacity-90 transition-opacity"
+              >
+                <span>Visit source</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      `;
+    }
+
+    function renderTools() {
+      const gridContainer = document.getElementById('toolsContainer');
+      const deckSection = document.getElementById('deckSection');
+      const deckStage = document.getElementById('deckStage');
+      const deckDots = document.getElementById('deckDots');
+      const deckCounter = document.getElementById('deckCounter');
+      const emptyState = document.getElementById('emptyState');
+      const statusBar = document.getElementById('activeFilterStatus');
+      const statusText = document.getElementById('filterSummaryText');
+
+      const list = getFilteredTools();
+      const topVotedId = getTopVotedId();
+
+      const hasFilter =
+        state.selectedCategory !== 'all' ||
+        state.selectedPricing !== 'all' ||
+        state.searchQuery.trim() !== '' ||
+        state.showSavedOnly;
+
+      if (hasFilter) {
+        statusBar.classList.remove('hidden');
+        statusText.textContent = `Showing ${list.length} of ${TOOLS.length} tools`;
+      } else {
+        statusBar.classList.add('hidden');
+      }
+
+      if (list.length === 0) {
+        gridContainer.innerHTML = '';
+        deckStage.innerHTML = '';
+        deckSection.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      if (state.viewMode === 'deck') {
+        gridContainer.classList.add('hidden');
+        deckSection.classList.remove('hidden');
+        if (state.deckIndex >= list.length) state.deckIndex = 0;
+        if (state.deckIndex < 0) state.deckIndex = list.length - 1;
+
+        const currentTool = list[state.deckIndex];
+        deckCounter.textContent = `Card ${state.deckIndex + 1} of ${list.length} · Use ← / → keys`;
+        deckStage.innerHTML = renderCardHtml(currentTool, state.deckIndex, topVotedId, true);
+
+        deckDots.innerHTML = list
+          .map(
+            (t, i) => `
+              <button
+                type="button"
+                data-deck-idx="${i}"
+                aria-label="Go to card ${i + 1}"
+                class="h-2 rounded-full transition-all cursor-pointer ${
+                  i === state.deckIndex ? 'w-7 bg-blue-600 dark:bg-white' : 'w-2 bg-zinc-400/50 hover:bg-zinc-500'
+                }"
+              ></button>
+            `
+          )
+          .join('');
+      } else {
+        deckSection.classList.add('hidden');
+        gridContainer.classList.remove('hidden');
+        gridContainer.innerHTML = list.map((tool, index) => renderCardHtml(tool, index, topVotedId, false)).join('');
+      }
+    }
+
+    function attach3DTilt(containerEl) {
+      containerEl.addEventListener('mousemove', (e) => {
+        const card = e.target.closest('.glass-card');
+        if (!card) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+        const rotateY = ((x / rect.width) - 0.5) * 6;
+        const rotateX = ((y / rect.height) - 0.5) * -6;
+        card.style.transform = `rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-3px)`;
+      });
+      containerEl.addEventListener('mouseleave', () => {
+        containerEl.querySelectorAll('.glass-card').forEach((c) => {
+          c.style.transform = '';
+        });
+      }, true);
+    }
+
+    function buildGroupmeText() {
+      const intro = document.getElementById('customHeaderInput').value.trim();
+      let selected = [];
+
+      if (state.groupmeFormat === 'full') {
+        selected = TOOLS;
+      } else if (state.groupmeFormat === 'highlights') {
+        selected = [TOOLS[0], TOOLS[3], TOOLS[6]];
+      } else {
+        selected = TOOLS.filter((t) => state.bookmarkedIds.has(t.id));
+      }
+
+      if (selected.length === 0) {
+        return `${intro}\n\n(No tools starred yet — click "Save" on any card to build a custom GroupMe list!)`;
+      }
+
+      const lines = [];
+      if (intro) {
+        lines.push(intro, '');
+      }
+
+      selected.forEach((tool, idx) => {
+        const tag = tool.featured ? '🔥 #1 Launch · ' : '';
+        lines.push(`${idx + 1}. ${tag}${tool.name} (${tool.pricingBadge})`);
+        lines.push(`${tool.oneLine}`);
+        lines.push(`Best for: ${tool.usefulFor}`);
+        lines.push(`🔗 ${tool.url}`);
+        lines.push('');
+      });
+
+      lines.push('Reply with which one you are trying first!');
+      return lines.join('\n').trim();
+    }
+
+    function renderGroupmeModal() {
+      document.querySelectorAll('.fmt-btn').forEach((btn) => {
+        const active = btn.dataset.fmt === state.groupmeFormat;
+        if (active) {
+          btn.className = 'fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold border border-blue-500 bg-blue-500/15 text-blue-700 dark:text-blue-300 transition-colors cursor-pointer';
+        } else {
+          btn.className = 'fmt-btn px-3 py-1.5 rounded-lg text-xs font-semibold glass-chip text-zinc-600 dark:text-zinc-300 hover:border-blue-500/50 transition-colors cursor-pointer';
+        }
+      });
+
+      const text = buildGroupmeText();
+      const preview = document.getElementById('groupmePreview');
+      preview.value = text;
+      document.getElementById('charCountLabel').textContent = `${text.length} chars`;
+    }
+
+    function openGroupmeModal() {
+      renderGroupmeModal();
+      document.getElementById('groupmeModal').classList.remove('hidden');
+    }
+
+    function closeGroupmeModal() {
+      document.getElementById('groupmeModal').classList.add('hidden');
+    }
+
+    function copyTextToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(
+          () => showToast('GroupMe message copied!'),
+          () => fallbackCopy(text)
+        );
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.getElementById('groupmePreview');
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('GroupMe message copied!');
+      } catch (e) {
+        showToast('Select the text above and press Ctrl/Cmd+C');
+      }
+    }
+
+    function resetAllFilters() {
+      state.selectedCategory = 'all';
+      state.selectedPricing = 'all';
+      state.searchQuery = '';
+      state.showSavedOnly = false;
+      state.deckIndex = 0;
+      document.getElementById('searchInput').value = '';
+      document.getElementById('pricingFilter').value = 'all';
+      renderAll();
+    }
+
+    function handleRecommenderGoal(goal) {
+      const map = {
+        coding: {
+          id: 'gpt-6-2',
+          label: 'GPT-6.2 Astra & Sol — best all-around upgrade for multi-service debugging and coding throughput.'
+        },
+        visuals: {
+          id: 'mai-image-2-7',
+          label: 'MAI Image 2.7 & Canvas — #1 image editing model with transparent backgrounds at ~1¢–3.5¢/image.'
+        },
+        workflow: {
+          id: 'chatgpt-space',
+          label: 'ChatGPT Space & Live Dictation — collaborative auto-updating Pages and unlimited-length voice dictation.'
+        },
+        free: {
+          id: 'coderabbit-verify',
+          label: 'CodeRabbit Verify — completely free during public beta for autonomous PR and user-journey testing.'
+        }
+      };
+
+      const pick = map[goal];
+      if (!pick) return;
+
+      resetAllFilters();
+      state.viewMode = 'grid';
+      state.highlightedToolId = pick.id;
+      state.expandedIds.add(pick.id);
+      document.getElementById('recommenderResult').textContent = `Recommended: ${pick.label}`;
+      document.getElementById('clearPickBtn').classList.remove('hidden');
+
+      document.querySelectorAll('.goal-btn').forEach((b) => {
+        if (b.dataset.goal === goal) {
+          b.classList.add('border-blue-500', 'ring-1', 'ring-blue-500');
+        } else {
+          b.classList.remove('border-blue-500', 'ring-1', 'ring-blue-500');
+        }
+      });
+
+      renderAll();
+      const card = document.getElementById(`card-${pick.id}`);
+      if (card) {
+        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    function clearHighlight() {
+      state.highlightedToolId = null;
+      document.getElementById('recommenderResult').textContent = "Select a goal to highlight this week's best match.";
+      document.getElementById('clearPickBtn').classList.add('hidden');
+      document.querySelectorAll('.goal-btn').forEach((b) => {
+        b.classList.remove('border-blue-500', 'ring-1', 'ring-blue-500');
+      });
+      renderTools();
+    }
+
+    function initHero3D() {
+      const canvas = document.getElementById('hero3dCanvas');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const parent = canvas.parentElement;
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+      camera.position.z = 5.4;
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+      scene.add(ambientLight);
+
+      const dirLight1 = new THREE.DirectionalLight(0x3b82f6, 1.4);
+      dirLight1.position.set(4, 5, 4);
+      scene.add(dirLight1);
+
+      const dirLight2 = new THREE.DirectionalLight(0xf97316, 1.1);
+      dirLight2.position.set(-4, -3, 3);
+      scene.add(dirLight2);
+
+      const group = new THREE.Group();
+      scene.add(group);
+
+      // Tactile 3D Crystal Core
+      const coreGeo = new THREE.IcosahedronGeometry(1.32, 1);
+      const coreMat = new THREE.MeshPhysicalMaterial({
+        color: 0x3b82f6,
+        roughness: 0.18,
+        metalness: 0.15,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.1,
+        flatShading: true
+      });
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      group.add(coreMesh);
+
+      // Subtle wireframe cage
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: 0xffffff,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.22
+      });
+      const wireMesh = new THREE.Mesh(new THREE.IcosahedronGeometry(1.36, 1), wireMat);
+      group.add(wireMesh);
+
+      // Orbiting 3D Torus Rings
+      const ringGeo1 = new THREE.TorusGeometry(2.05, 0.045, 16, 80);
+      const ringMat1 = new THREE.MeshStandardMaterial({ color: 0xf97316, roughness: 0.25, metalness: 0.65 });
+      const ring1 = new THREE.Mesh(ringGeo1, ringMat1);
+      ring1.rotation.x = Math.PI / 3;
+      ring1.rotation.y = Math.PI / 6;
+      group.add(ring1);
+
+      const ringGeo2 = new THREE.TorusGeometry(2.35, 0.03, 16, 80);
+      const ringMat2 = new THREE.MeshStandardMaterial({ color: 0x10b981, roughness: 0.25, metalness: 0.55 });
+      const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
+      ring2.rotation.x = -Math.PI / 3.5;
+      ring2.rotation.z = Math.PI / 4;
+      group.add(ring2);
+
+      // Floating 3D satellite cubes
+      const satGroup = new THREE.Group();
+      const satGeo = new THREE.BoxGeometry(0.22, 0.22, 0.22);
+      const satMat = new THREE.MeshStandardMaterial({ color: 0x6366f1, roughness: 0.2, metalness: 0.5 });
+      for (let i = 0; i < 6; i++) {
+        const sat = new THREE.Mesh(satGeo, satMat);
+        const angle = (i / 6) * Math.PI * 2;
+        sat.position.set(Math.cos(angle) * 2.1, Math.sin(angle * 2) * 0.7, Math.sin(angle) * 2.1);
+        satGroup.add(sat);
+      }
+      group.add(satGroup);
+
+      let targetRotX = 0.2;
+      let targetRotY = 0.3;
+      let isDragging = false;
+      let prevX = 0;
+      let prevY = 0;
+
+      canvas.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        prevX = e.clientX;
+        prevY = e.clientY;
+      });
+      window.addEventListener('pointerup', () => {
+        isDragging = false;
+      });
+      canvas.addEventListener('pointermove', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        if (isDragging) {
+          const dx = e.clientX - prevX;
+          const dy = e.clientY - prevY;
+          targetRotY += dx * 0.012;
+          targetRotX += dy * 0.012;
+          prevX = e.clientX;
+          prevY = e.clientY;
+        } else {
+          const nx = ((e.clientX - rect.left) / rect.width - 0.5) * 0.9;
+          const ny = ((e.clientY - rect.top) / rect.height - 0.5) * 0.9;
+          targetRotY = nx;
+          targetRotX = ny;
+        }
+      });
+
+      function resize() {
+        const w = parent.clientWidth || 320;
+        const h = parent.clientHeight || 260;
+        renderer.setSize(w, h, false);
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      let animId = null;
+      function animate() {
+        animId = requestAnimationFrame(animate);
+        coreMesh.rotation.y += 0.004;
+        wireMesh.rotation.y += 0.004;
+        ring1.rotation.z += 0.005;
+        ring2.rotation.y -= 0.004;
+        satGroup.rotation.y += 0.006;
+
+        group.rotation.y += (targetRotY - group.rotation.y) * 0.06;
+        group.rotation.x += (targetRotX - group.rotation.x) * 0.06;
+        renderer.render(scene, camera);
+      }
+      animate();
+    }
+
+    function renderAll() {
+      renderCategoryButtons();
+      renderViewButtons();
+      renderStatsAndSaved();
+      renderTools();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPersistedState();
+      applyTheme();
+      renderAll();
+      initHero3D();
+
+      attach3DTilt(document.getElementById('toolsContainer'));
+      attach3DTilt(document.getElementById('deckStage'));
+
+      document.getElementById('themeToggleBtn').addEventListener('click', () => {
+        state.theme = state.theme === 'dark' ? 'light' : 'dark';
+        applyTheme();
+        savePersistedState();
+      });
+
+      document.getElementById('savedFilterBtn').addEventListener('click', () => {
+        state.showSavedOnly = !state.showSavedOnly;
+        state.deckIndex = 0;
+        renderAll();
+      });
+
+      document.getElementById('gridViewBtn').addEventListener('click', () => {
+        state.viewMode = 'grid';
+        renderAll();
+      });
+
+      document.getElementById('deckViewBtn').addEventListener('click', () => {
+        state.viewMode = 'deck';
+        renderAll();
+      });
+
+      document.getElementById('deckPrevBtn').addEventListener('click', () => {
+        const list = getFilteredTools();
+        if (!list.length) return;
+        state.deckIndex = (state.deckIndex - 1 + list.length) % list.length;
+        renderTools();
+      });
+
+      document.getElementById('deckNextBtn').addEventListener('click', () => {
+        const list = getFilteredTools();
+        if (!list.length) return;
+        state.deckIndex = (state.deckIndex + 1) % list.length;
+        renderTools();
+      });
+
+      document.getElementById('deckDots').addEventListener('click', (e) => {
+        const dot = e.target.closest('button[data-deck-idx]');
+        if (!dot) return;
+        state.deckIndex = Number(dot.dataset.deckIdx);
+        renderTools();
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (state.viewMode !== 'deck') return;
+        const modalOpen = !document.getElementById('groupmeModal').classList.contains('hidden');
+        if (modalOpen) return;
+        const list = getFilteredTools();
+        if (!list.length) return;
+        if (e.key === 'ArrowRight') {
+          state.deckIndex = (state.deckIndex + 1) % list.length;
+          renderTools();
+        } else if (e.key === 'ArrowLeft') {
+          state.deckIndex = (state.deckIndex - 1 + list.length) % list.length;
+          renderTools();
+        }
+      });
+
+      document.getElementById('categoryFilters').addEventListener('click', (e) => {
+        const btn = e.target.closest('.cat-btn');
+        if (!btn) return;
+        state.selectedCategory = btn.dataset.cat;
+        state.deckIndex = 0;
+        renderAll();
+      });
+
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        state.deckIndex = 0;
+        renderTools();
+      });
+
+      document.getElementById('pricingFilter').addEventListener('change', (e) => {
+        state.selectedPricing = e.target.value;
+        state.deckIndex = 0;
+        renderTools();
+      });
+
+      document.getElementById('resetAllFiltersBtn').addEventListener('click', resetAllFilters);
+      document.getElementById('emptyResetBtn').addEventListener('click', resetAllFilters);
+
+      document.getElementById('jumpFeaturedBtn').addEventListener('click', () => {
+        resetAllFilters();
+        state.viewMode = 'grid';
+        state.highlightedToolId = 'gpt-6-2';
+        state.expandedIds.add('gpt-6-2');
+        renderAll();
+        const card = document.getElementById('card-gpt-6-2');
+        if (card) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      });
+
+      document.getElementById('recommenderBtns').addEventListener('click', (e) => {
+        const btn = e.target.closest('.goal-btn');
+        if (!btn) return;
+        handleRecommenderGoal(btn.dataset.goal);
+      });
+
+      document.getElementById('clearPickBtn').addEventListener('click', clearHighlight);
+
+      function handleCardAction(e) {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const action = btn.dataset.action;
+        const id = btn.dataset.id;
+
+        if (action === 'vote') {
+          if (state.userVoted.has(id)) {
+            state.userVoted.delete(id);
+            state.votes[id] = Math.max(0, (state.votes[id] || 1) - 1);
+          } else {
+            state.userVoted.add(id);
+            state.votes[id] = (state.votes[id] || 0) + 1;
+          }
+          savePersistedState();
+          renderAll();
+        } else if (action === 'save') {
+          if (state.bookmarkedIds.has(id)) {
+            state.bookmarkedIds.delete(id);
+            showToast('Removed from Saved');
+          } else {
+            state.bookmarkedIds.add(id);
+            showToast('Saved to your GroupMe picks');
+          }
+          savePersistedState();
+          renderAll();
+        } else if (action === 'expand') {
+          if (state.expandedIds.has(id)) {
+            state.expandedIds.delete(id);
+          } else {
+            state.expandedIds.add(id);
+          }
+          renderTools();
+        }
+      }
+
+      document.getElementById('toolsContainer').addEventListener('click', handleCardAction);
+      document.getElementById('deckStage').addEventListener('click', handleCardAction);
+
+      document.getElementById('openGroupmeBtn').addEventListener('click', openGroupmeModal);
+      document.getElementById('bottomGroupmeBtn').addEventListener('click', openGroupmeModal);
+      document.getElementById('closeModalBtn').addEventListener('click', closeGroupmeModal);
+      document.getElementById('cancelModalBtn').addEventListener('click', closeGroupmeModal);
+
+      document.getElementById('groupmeModal').addEventListener('click', (e) => {
+        if (e.target.id === 'groupmeModal') closeGroupmeModal();
+      });
+
+      document.querySelector('#groupmeModal').addEventListener('click', (e) => {
+        const fmtBtn = e.target.closest('.fmt-btn');
+        if (!fmtBtn) return;
+        state.groupmeFormat = fmtBtn.dataset.fmt;
+        renderGroupmeModal();
+      });
+
+      document.getElementById('customHeaderInput').addEventListener('input', renderGroupmeModal);
+
+      document.getElementById('copyGroupmeTextBtn').addEventListener('click', () => {
+        copyTextToClipboard(document.getElementById('groupmePreview').value);
+      });
+    });
+  </script>
+</body>
+</html>
