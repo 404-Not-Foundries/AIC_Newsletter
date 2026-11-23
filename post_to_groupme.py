@@ -32,17 +32,17 @@ def extract_tools_from_html(html_path: str) -> list[dict]:
     js_array = match.group(1)
     # Extract key fields per object safely
     tools = []
-    for block in re.finditer(r"\{(.*?)\n      \}", js_array, re.DOTALL):
+    for block in re.finditer(r"\{(.*?)\n\s*\}", js_array, re.DOTALL):
         chunk = block.group(1)
         def grab(key: str) -> str:
-            m = re.search(rf"{key}:\s*(['\"])(.*?)\1", chunk)
+            m = re.search(rf'(?:"{key}"|{key}):\s*([\'"])(.*?)\1', chunk)
             return m.group(2) if m else ""
 
         name = grab("name")
         one_line = grab("oneLine")
         pricing = grab("pricingBadge")
         url = grab("url")
-        featured = bool(re.search(r"featured:\s*true", chunk))
+        featured = bool(re.search(r'(?:"featured"|featured):\s*true', chunk))
         if name and url:
             tools.append({
                 "name": name,
